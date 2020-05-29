@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for profile in profiles %}
+    {{profile.name}} <!-- models.py와 맞춰주어야함. 여기 profile은 model의 class명이고, name, nick, photo는 models.py밑에 있는 각 요소들의 이름을 그대로 가지고 온 것.-->
+    {{profile.nick}}
+    {{profile.photo.url}}
+    <img src="{{ profile.photo.url }}">
+    <form method="POST" action="{% url 'newVideo' profile.id %}">{% csrf_token %}
+        <input placeholder="링크", name = "link">
+        <button>전송</button>
+    </form>
+    <ul>
+        {% for video in profile.videos.all %}
+        <li>{{video.link}}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    <div style="display: flex; justify-content: center;">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'want' %}">{% csrf_token %} <!--views.py와 연결-->
+            <input placeholder="이름" name="name"/>
+            <br>
+            <input placeholder="별명" name="nickname"/>
+            <br>
+            <input type="file" name="photo">
+            <br>
+            <button>입력</button>
+        </form>
+    </div>
+</body>
+</html>
